@@ -1,9 +1,8 @@
 import {writeHeapSnapshot} from 'v8';
-import {setTimeout as setTimeoutPromise} from 'node:timers/promises';
 
 const PROMISE_COUNT = 10_000;
 const TIMEOUT_SHORT_MS = 10_000;
-const TIMEOUT_LONG_MS = 20_000;
+const TIMEOUT_LONG_MS = 30_000;
 
 function captureSnapshot(number) {
     console.log(`Capturing heap snapshot: ${number}`);
@@ -18,19 +17,22 @@ let resolvedCount = 0; // Count of how many promises have resolved.
 console.log('Creating promises...');
 const promises = Array.from({length: PROMISE_COUNT}, (_, i) => i + 1)
     .map(async () => {
-        const ac = new AbortController();
-        const signal = ac.signal;
+        let timeoutId = undefined;
         return Promise.race([
-            setTimeoutPromise(TIMEOUT_SHORT_MS)
-                .then(() => {
-                    // Abort the long timeout.
-                    ac.abort();
+            new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
                     resolvedCount++;
-                }),
-            setTimeoutPromise(TIMEOUT_LONG_MS, undefined, { signal })
-                .then(() => {
+                    // Cancel the long timeout.
+                    clearTimeout(timeoutId);
+                }, TIMEOUT_SHORT_MS);
+            }),
+            new Promise((resolve) => {
+                timeoutId = setTimeout(() => {
+                    resolve();
                     resolvedCount++;
-                })
+                }, TIMEOUT_LONG_MS);
+            })
         ]);
     });
 
