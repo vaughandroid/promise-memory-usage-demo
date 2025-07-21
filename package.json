@@ -1,0 +1,24 @@
+{
+  "name": "promise-memory-usage-demo",
+  "version": "1.0.0",
+  "description": "Demo exploring how JS promises utilise memory",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vaughandroid/promise-memory-usage-demo.git"
+  },
+  "keywords": [
+    "demo",
+    "memory",
+    "promises"
+  ],
+  "author": "Chris Vaughan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vaughandroid/promise-memory-usage-demo/issues"
+  },
+  "homepage": "https://github.com/vaughandroid/promise-memory-usage-demo#readme"
+}
